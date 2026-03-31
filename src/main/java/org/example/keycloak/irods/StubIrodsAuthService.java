@@ -10,7 +10,7 @@ import org.keycloak.authentication.AuthenticationFlowContext;
  */
 public class StubIrodsAuthService implements IrodsAuthService {
     @Override
-    public IrodsAuthResult authenticate(String username, String password, AuthenticationFlowContext context) {
+    public IrodsAuthResult authenticate(String username, String password, String loginType, AuthenticationFlowContext context) {
         return IrodsAuthResult.failure("No iRODS adapter is wired yet");
     }
 }

@@ -88,9 +88,4 @@ public class IrodsAuthenticatorFactory implements AuthenticatorFactory {
 
         return List.of(mode, principalMapper);
     }
-
-    @Override
-    public String getDisplayCategory() {
-        return "iRODS";
-    }
 }

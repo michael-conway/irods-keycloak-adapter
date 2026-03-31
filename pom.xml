@@ -17,8 +17,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <keycloak.version>26.5.5</keycloak.version>
         <maven.compiler.release>17</maven.compiler.release>
+        <irods4j.version>0.6.0</irods4j.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.keycloak</groupId>
@@ -44,7 +44,11 @@
             <version>3.6.1.Final</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.irods</groupId>
+            <artifactId>irods4j</artifactId>
+            <version>${irods4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
