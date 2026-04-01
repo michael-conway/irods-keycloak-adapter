@@ -48,23 +48,20 @@ bin/kc.sh build
 
 - The login form renders.
 - Submitted credentials are handed to `IrodsAuthService`.
-- The default `StubIrodsAuthService` always rejects authentication with a clear message.
+- The default `StubIrodsAuthService` authenticates to the underlying iRODS service
 
 That gives you a stable starting point before adding real iRODS integration.
 
-## Second-step wiring points
+## Testing notes
 
-When you are ready to integrate, replace or extend:
+There is a test framework that supports unit tests in the compose directory.
 
-- `StubIrodsAuthService.authenticate(...)`
-- factory creation logic in `IrodsAuthenticatorFactory.create(...)`
+* run docker compose build to build a test irods and keycloak server
+* run docker compose up to launch with default testing configuration
+* run the unit tests 
 
-Typical next steps:
 
-- call an iRODS-facing HTTP service,
-- invoke a PAM/OIDC bridge,
-- map an external iRODS principal to a Keycloak user,
-- add provisioning or attribute synchronization.
+## Deployment notes
 
 ## Version notes
 

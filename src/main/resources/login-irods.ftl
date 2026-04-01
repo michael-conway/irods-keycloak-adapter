@@ -13,7 +13,14 @@
         <input tabindex="2" id="password" name="password" type="password" autocomplete="current-password" />
       </div>
       <div class="form-group">
-        <input tabindex="3" class="btn btn-primary btn-block btn-lg" name="login" id="kc-login" type="submit" value="Log in" />
+        <label for="loginType">Login Type</label>
+        <select tabindex="3" id="loginType" name="loginType" class="form-control">
+            <option value="native">native login</option>
+            <option value="pam">pam login</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input tabindex="4" class="btn btn-primary btn-block btn-lg" name="login" id="kc-login" type="submit" value="Log in" />
       </div>
     </form>
   </#if>

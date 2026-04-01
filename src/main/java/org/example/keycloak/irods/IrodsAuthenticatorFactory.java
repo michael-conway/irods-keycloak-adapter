@@ -19,7 +19,12 @@ public class IrodsAuthenticatorFactory implements AuthenticatorFactory {
 
     @Override
     public Authenticator create(KeycloakSession session) {
-        return new IrodsAuthenticator(new StubIrodsAuthService());
+
+        IrodsAuthenticatorConfigurationService irodsAuthenticatorConfigurationService = new IrodsAuthenticatorConfigurationService();
+        IrodsAuthenticatorConfiguration config = irodsAuthenticatorConfigurationService.initConfiguration();
+
+
+        return new IrodsAuthenticator(new StubIrodsAuthService(config));
     }
 
     @Override
@@ -87,10 +92,5 @@ public class IrodsAuthenticatorFactory implements AuthenticatorFactory {
         principalMapper.setHelpText("Reserved mapping strategy name for translating external identities to Keycloak users.");
 
         return List.of(mode, principalMapper);
-    }
-
-    @Override
-    public String getDisplayCategory() {
-        return "iRODS";
     }
 }

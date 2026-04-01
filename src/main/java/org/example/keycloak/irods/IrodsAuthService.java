@@ -9,5 +9,5 @@ import org.keycloak.authentication.AuthenticationFlowContext;
  * Wire a real adapter in a later step.
  */
 public interface IrodsAuthService {
-    IrodsAuthResult authenticate(String username, String password, AuthenticationFlowContext context);
+    IrodsAuthResult authenticate(String username, String password, String loginType, AuthenticationFlowContext context);
 }

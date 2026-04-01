@@ -37,6 +37,7 @@ public class IrodsAuthenticator implements Authenticator {
         MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
         String username = formParams.getFirst("username");
         String password = formParams.getFirst("password");
+        String loginType = formParams.getFirst("loginType");
 
         if (username == null || username.isBlank() || password == null || password.isBlank()) {
             Response challenge = context.form()
@@ -46,7 +47,7 @@ public class IrodsAuthenticator implements Authenticator {
             return;
         }
 
-        IrodsAuthResult result = irodsAuthService.authenticate(username, password, context);
+        IrodsAuthResult result = irodsAuthService.authenticate(username, password, loginType, context);
         if (!result.isAuthenticated()) {
             LOG.debugf("iRODS authentication failed for user '%s'", username);
             String message = result.getMessage() == null ? "Invalid iRODS credentials" : result.getMessage();
