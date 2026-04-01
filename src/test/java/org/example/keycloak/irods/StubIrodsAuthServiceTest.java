@@ -17,4 +17,17 @@ public class StubIrodsAuthServiceTest extends AbstractIrodsTest {
         IrodsAuthResult result = service.authenticate(testUser, testPassword, "native", null);
         assertTrue(result.isAuthenticated());
     }
+
+    @Test
+    public void testAuthenticateWhenInvalid() {
+        String testUser = testProperties.getProperty("test_user_1");
+        String testPassword = "clearlyinvalidpassword";
+
+        IrodsAuthenticatorConfigurationService configService = new IrodsAuthenticatorConfigurationService();
+        IrodsAuthenticatorConfiguration config = configService.initConfiguration();
+
+        StubIrodsAuthService service = new StubIrodsAuthService(config);
+        IrodsAuthResult result = service.authenticate(testUser, testPassword, "native", null);
+        assertFalse(result.isAuthenticated());
+    }
 }

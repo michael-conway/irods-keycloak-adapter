@@ -1,3 +1,4 @@
+# must define KEYCLOAK_ENV to point to the authenticator.properties file used for keycloak
 services:
   postgres:
     image: postgres:15
@@ -51,6 +52,9 @@ services:
       dockerfile: Dockerfile-keycloak
     env_file:
       - keycloak.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ${KEYCLOAK_ENV}:/etc/irods-ext/authenticator.properties
     depends_on:
       postgres:
         condition: service_healthy
