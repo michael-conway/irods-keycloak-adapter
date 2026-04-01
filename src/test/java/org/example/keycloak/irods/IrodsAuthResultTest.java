@@ -3,7 +3,7 @@ package org.example.keycloak.irods;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class IrodsAuthResultTest {
+public class IrodsAuthResultTest extends AbstractIrodsTest {
 
     @Test
     public void testSuccess() {

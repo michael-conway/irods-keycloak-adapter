@@ -19,7 +19,12 @@ public class IrodsAuthenticatorFactory implements AuthenticatorFactory {
 
     @Override
     public Authenticator create(KeycloakSession session) {
-        return new IrodsAuthenticator(new StubIrodsAuthService());
+
+        IrodsAuthenticatorConfigurationService irodsAuthenticatorConfigurationService = new IrodsAuthenticatorConfigurationService();
+        IrodsAuthenticatorConfiguration config = irodsAuthenticatorConfigurationService.initConfiguration();
+
+
+        return new IrodsAuthenticator(new StubIrodsAuthService(config));
     }
 
     @Override

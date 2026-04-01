@@ -3,13 +3,18 @@ package org.example.keycloak.irods;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class StubIrodsAuthServiceTest {
+public class StubIrodsAuthServiceTest extends AbstractIrodsTest {
 
     @Test
-    public void testAuthenticate_ReturnsFailure() {
-        StubIrodsAuthService service = new StubIrodsAuthService();
-        IrodsAuthResult result = service.authenticate("user", "pass", "native", null);
-        assertFalse(result.isAuthenticated());
-        assertEquals("No iRODS adapter is wired yet", result.getMessage());
+    public void testAuthenticate() {
+        String testUser = testProperties.getProperty("test_user_1");
+        String testPassword = testProperties.getProperty("test_user_1_password");
+
+        IrodsAuthenticatorConfigurationService configService = new IrodsAuthenticatorConfigurationService();
+        IrodsAuthenticatorConfiguration config = configService.initConfiguration();
+
+        StubIrodsAuthService service = new StubIrodsAuthService(config);
+        IrodsAuthResult result = service.authenticate(testUser, testPassword, "native", null);
+        assertTrue(result.isAuthenticated());
     }
 }
