@@ -52,6 +52,12 @@ bin/kc.sh build
 
 That gives you a stable starting point before adding real iRODS integration.
 
+
+## Docs
+
+* Keycloak Server Development guide - https://www.keycloak.org/docs/latest/server_development/#_vault-spi
+
+
 ## Testing notes
 
 There is a test framework that supports unit tests in the compose directory.
