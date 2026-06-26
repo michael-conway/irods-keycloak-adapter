@@ -1,4 +1,4 @@
-package org.example.keycloak.irods;
+package org.irods.keycloak.plugins;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
