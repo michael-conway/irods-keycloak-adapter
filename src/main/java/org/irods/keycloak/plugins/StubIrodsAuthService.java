@@ -1,4 +1,4 @@
-package org.example.keycloak.irods;
+package org.irods.keycloak.plugins;
 
 import org.irods.irods4j.authentication.NativeAuthPlugin;
 import org.irods.irods4j.high_level.connection.IRODSConnection;

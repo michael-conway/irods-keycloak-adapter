@@ -1,4 +1,4 @@
-package org.example.keycloak.irods;
+package org.irods.keycloak.plugins;
 
 import java.util.List;
 import org.keycloak.Config;
