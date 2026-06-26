@@ -1,4 +1,4 @@
-package org.example.keycloak.irods;
+package org.irods.keycloak.plugins;
 
 import org.irods.irods4j.authentication.NativeAuthPlugin;
 import org.irods.irods4j.high_level.connection.IRODSConnection;
@@ -59,9 +59,15 @@ public class StubIrodsAuthService implements IrodsAuthService {
 
             return IrodsAuthResult.success(username);
 
-        } catch (Exception e) {
-            LOG.warn("error authenticating user", e);
-            return IrodsAuthResult.failure(e.getMessage());
+        } catch (Throwable t) {
+            // irods4j can throw ExceptionInInitializerError from static logger init
+            // under containerized runtimes; convert to auth failure instead of 500.
+            LOG.warn("error authenticating user", t);
+            String message = t.getMessage();
+            if (message == null || message.isBlank()) {
+                message = t.getClass().getSimpleName();
+            }
+            return IrodsAuthResult.failure(message);
         } finally {
             try {
                 conn.disconnect();

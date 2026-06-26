@@ -48,8 +48,8 @@ services:
     hostname: keycloak
     platform: linux/amd64
     build:
-      context: .
-      dockerfile: Dockerfile-keycloak
+      context: ..
+      dockerfile: compose/Dockerfile-keycloak
     env_file:
       - keycloak.env
     volumes:

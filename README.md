@@ -1,69 +1,120 @@
-# keycloak-irods-authenticator-spi
+# iRODS Keycloak Adapter
 
-Standalone Maven project for a custom Keycloak Authenticator SPI.
+`irods-keycloak-adapter` is an alpha Keycloak Java provider project for
+iRODS-oriented Keycloak integration.
 
-This project is intentionally **not wired to iRODS yet**. It exists to give you a clean, buildable provider scaffold that can be integrated with a real iRODS authentication path in a second step.
+It currently contains two Keycloak SPIs:
 
-## Included
+- a login-flow authenticator scaffold for iRODS-oriented authentication work,
+- a thin admin-event listener that forwards selected Keycloak user, group, and
+  group-membership activity to `irods-keycloak-admin`.
 
-- `IrodsAuthenticator`: Keycloak login-flow authenticator skeleton
-- `IrodsAuthenticatorFactory`: provider factory registered through Java SPI
-- `IrodsAuthService`: integration seam for later iRODS wiring
-- `StubIrodsAuthService`: placeholder implementation that always fails closed
-- `IrodsAuthResult`: small result object for auth outcomes
-- `login-irods.ftl`: custom login form template
-- `META-INF/services/org.keycloak.authentication.AuthenticatorFactory`: provider registration
+The adapter is intentionally not the iRODS administration layer.
+`irods-keycloak-admin` owns iRODS mutation policy, mapping resolution, audit,
+retry behavior, and the private callback API. This repository supplies the
+Keycloak-side plugin surface needed to observe Keycloak activity and submit
+compact callbacks to that Go service.
 
-## Design goal
+## Status
 
-This repository is meant to be:
+| Field | Value |
+| --- | --- |
+| Release | `0.1.0-SNAPSHOT` |
+| Stability | Alpha / active development |
+| Java | `17` |
+| Keycloak | `26.5.5` |
+| Maven group | `org.irods` |
+| Package | `org.irods.keycloak.plugins` |
 
-- standalone,
-- safe to load into Keycloak without external dependencies,
-- ready to wire to iRODS later.
+The event listener is disabled by default unless an admin-service callback URL
+is configured.
 
-There is no embedded HTTP client, no iRODS Java client usage, no token exchange logic, and no environment-specific configuration.
+## Purpose
 
-## Build
+This project exists to keep Keycloak-side integration narrow and reviewable.
+It should load into Keycloak, observe selected administrative events, and call
+the `irods-keycloak-admin` private event endpoint.
+
+It is not intended to:
+
+- replace iRODS ACL, user, group, ticket, collection, data object, resource, or
+  metadata administration,
+- embed broad iRODS administration logic inside the Keycloak JVM,
+- maintain an independent synchronization database,
+- act as a generic Keycloak webhook framework.
+
+## Main Components
+
+| Component | Purpose |
+| --- | --- |
+| `IrodsAuthenticator` | Keycloak login-flow authenticator scaffold. |
+| `IrodsAuthenticatorFactory` | Authenticator provider factory registered through Java SPI. |
+| `IrodsAuthService` | Integration seam for authentication wiring. |
+| `StubIrodsAuthService` | Current iRODS native-auth service implementation used by the scaffold. |
+| `IrodsKeycloakEventListenerProvider` | Thin admin-event listener for `irods-keycloak-admin` callbacks. |
+| `IrodsKeycloakEventListenerProviderFactory` | Event-listener provider factory registered through Java SPI. |
+| `src/main/resources/theme-resources/templates/login-irods.ftl` | Custom login form template. |
+| `compose` | Local container/test setup files. |
+
+## Quick Start
+
+Build the provider JAR:
 
 ```bash
 mvn clean package
 ```
 
-This produces a provider JAR under `target/`.
+The deployable assembly is written to:
 
-## Deploy to Keycloak
-
-1. Copy the JAR to your Keycloak `providers/` directory.
-2. Rebuild Keycloak:
-
-```bash
-bin/kc.sh build
+```text
+target/keycloak-irods-authenticator.jar
 ```
 
-3. Start Keycloak.
-4. In the Admin Console, copy an authentication flow and add the **iRODS Authenticator** execution.
+Install into Keycloak:
 
-## Current behavior
+```bash
+cp target/keycloak-irods-authenticator.jar "$KEYCLOAK_HOME/providers/"
+"$KEYCLOAK_HOME/bin/kc.sh" build
+```
 
-- The login form renders.
-- Submitted credentials are handed to `IrodsAuthService`.
-- The default `StubIrodsAuthService` authenticates to the underlying iRODS service
+Enable the authenticator by adding the **iRODS Authenticator** execution to a
+copied authentication flow.
 
-That gives you a stable starting point before adding real iRODS integration.
+Enable admin-event forwarding by adding `irods-keycloak-admin-events` to the
+realm event listener list and configuring the callback URL and shared secret.
 
-## Testing notes
+## Runtime Model
 
-There is a test framework that supports unit tests in the compose directory.
+The intended event flow is:
 
-* run docker compose build to build a test irods and keycloak server
-* run docker compose up to launch with default testing configuration
-* run the unit tests 
+```text
+Keycloak Admin Console activity
+        |
+        v
+irods-keycloak-adapter EventListenerProvider
+        |
+        v
+POST /admin/v1/keycloak/events on irods-keycloak-admin
+        |
+        v
+iRODS mutation, audit, retry, and mapping policy in the Go service
+```
 
+The Java listener observes Keycloak admin events and sends compact callback
+payloads. The Go service remains the system that decides what iRODS action, if
+any, should occur.
 
-## Deployment notes
+## Documentation
 
-## Version notes
+- [Configuration Guide](./CONFIGURATION_GUIDE.md) - properties file format,
+  listener enablement, callback authentication, and Keycloak setup.
+- [Developer Notes](./DEVELOPER_NOTES.md) - architecture boundaries,
+  implementation notes, build/test workflow, and current behavior.
+- [`irods-keycloak-admin`](../irods-keycloak-admin/README.md) - related Go
+  control-plane service and callback API owner.
 
-This skeleton targets Keycloak `26.5.5` and Java `17`.
-If your Keycloak distribution differs, update `keycloak.version` in `pom.xml`.
+## References
+
+- [Keycloak Server Development guide](https://www.keycloak.org/docs/latest/server_development/)
+- [irods-keycloak-admin](../irods-keycloak-admin/README.md)
+- [irods4j](https://github.com/irods/irods4j)

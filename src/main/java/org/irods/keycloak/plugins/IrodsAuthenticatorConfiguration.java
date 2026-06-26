@@ -1,4 +1,4 @@
-package org.example.keycloak.irods;
+package org.irods.keycloak.plugins;
 
 /**
  * Configuration necessary to do irods authentication

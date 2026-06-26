@@ -1,4 +1,4 @@
-package org.example.keycloak.irods;
+package org.irods.keycloak.plugins;
 
 public class IrodsAuthResult {
     private final boolean authenticated;
