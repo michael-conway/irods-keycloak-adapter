@@ -11,6 +11,19 @@
     <name>Keycloak iRODS Authenticator SPI</name>
     <description>Skeleton Keycloak Authenticator SPI for iRODS-oriented authentication and claim mapping.</description>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/michael-conway/irods-keycloak-adapter</url>
+        </repository>
+        <snapshotRepository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/michael-conway/irods-keycloak-adapter</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
